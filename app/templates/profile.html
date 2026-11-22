@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-5">
+    <form method="post" class="card p-4">
+      <h1 class="h4 mb-1">Profile</h1>
+      <p class="text-secondary small">Username: <strong>{{ g.user.username }}</strong> · Role: {{ g.user.role }}</p>
+      <div class="mb-3">
+        <label class="form-label" for="full_name">Full name</label>
+        <input class="form-control" id="full_name" name="full_name" value="{{ g.user.full_name }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="email">E-mail</label>
+        <input class="form-control" id="email" name="email" type="email" value="{{ g.user.email }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="phone">Phone</label>
+        <input class="form-control" id="phone" name="phone" value="{{ g.user.phone }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="new_password">New password <span class="text-secondary">(leave empty to keep)</span></label>
+        <input class="form-control" id="new_password" name="new_password" type="password" minlength="6">
+      </div>
+      <button class="btn btn-accent w-100">Save changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

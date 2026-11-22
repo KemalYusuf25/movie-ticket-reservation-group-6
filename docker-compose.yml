@@ -1,0 +1,40 @@
+# Starts the whole project with one command:  docker compose up
+#   db  : PostgreSQL 16. On the FIRST start it runs db/01_schema.sql and
+#         db/02_data.sql automatically (tables, constraints, triggers, sample data).
+#   web : Flask web application, served by gunicorn.
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cinema
+      POSTGRES_USER: cinema
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cinema123}
+      TZ: Europe/Istanbul
+      PGTZ: Europe/Istanbul
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5433:5432"          # optional: lets DBeaver connect on localhost:5433
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cinema -d cinema"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: ./app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://cinema:${DB_PASSWORD:-cinema123}@db:5432/cinema
+      SECRET_KEY: ${SECRET_KEY:-change-this-secret-key-in-production}
+      TZ: Europe/Istanbul
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8080}:8000"
+
+volumes:
+  db-data:

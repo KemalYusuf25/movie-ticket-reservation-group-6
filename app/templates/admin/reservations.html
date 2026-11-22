@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Admin · Reservations{% endblock %}
+{% block content %}
+{% set active = 'admin_reservations' %}{% include "admin/_nav.html" %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 mb-0">Reservations</h1>
+  <div class="btn-group">
+    {% for key, label in [('', 'All'), ('confirmed', 'Confirmed'), ('pending', 'In cart'), ('cancelled', 'Cancelled')] %}
+      <a class="btn btn-sm {{ 'btn-light' if status == key else 'btn-outline-light' }}"
+         href="{{ url_for('admin_reservations', status=key) if key else url_for('admin_reservations') }}">{{ label }}</a>
+    {% endfor %}
+  </div>
+</div>
+<div class="table-responsive">
+<table class="table align-middle">
+  <thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Movie</th><th class="text-end">Tickets</th>
+    <th class="text-end">Total</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for r in reservations %}
+    <tr>
+      <td>{{ r.reservation_id }}</td>
+      <td class="text-nowrap">{{ r.reservation_date|dt }}</td>
+      <td>{{ r.full_name }} <span class="text-secondary small">@{{ r.username }}</span></td>
+      <td>{{ r.movies or '-' }}</td>
+      <td class="text-end">{{ r.ticket_count }}</td>
+      <td class="text-end">{{ r.total|money }}</td>
+      <td>
+        {% if r.status == 'confirmed' %}<span class="badge bg-success">confirmed</span>
+        {% elif r.status == 'pending' %}<span class="badge bg-warning text-dark">in cart until {{ r.expires_at|dt('%H:%M:%S') }}</span>
+        {% else %}<span class="badge bg-secondary">cancelled</span>{% endif %}
+      </td>
+      <td class="text-end">
+        {% if r.status != 'cancelled' %}
+        <form method="post" action="{{ url_for('cancel_reservation', reservation_id=r.reservation_id) }}"
+              onsubmit="return confirm('Cancel this reservation?')">
+          <button class="btn btn-sm btn-outline-danger">Cancel</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="8" class="text-secondary">No reservations.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

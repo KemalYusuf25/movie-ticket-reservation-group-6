@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Admin · Screenings{% endblock %}
+{% block content %}
+{% set active = 'admin_screenings' %}{% include "admin/_nav.html" %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h4 mb-0">Screenings</h1>
+  <div class="d-flex gap-2">
+    <div class="btn-group">
+      <a class="btn btn-sm {{ 'btn-light' if show != 'all' else 'btn-outline-light' }}" href="{{ url_for('admin_screenings') }}">Upcoming</a>
+      <a class="btn btn-sm {{ 'btn-light' if show == 'all' else 'btn-outline-light' }}" href="{{ url_for('admin_screenings', show='all') }}">All</a>
+    </div>
+    <a class="btn btn-accent" href="{{ url_for('admin_screening_form') }}"><i class="bi bi-plus-lg"></i> Add screening</a>
+  </div>
+</div>
+<div class="table-responsive">
+<table class="table align-middle">
+  <thead><tr><th>Date &amp; time</th><th>Movie</th><th>Cinema / hall</th><th>Format</th><th>Language</th>
+    <th class="text-end">Price</th><th class="text-end">Sold</th><th></th></tr></thead>
+  <tbody>
+  {% for s in screenings %}
+    <tr>
+      <td class="text-nowrap">{{ s.start_time|dt }}</td>
+      <td class="fw-semibold">{{ s.title }}</td>
+      <td>{{ s.cinema }} <span class="text-secondary">({{ s.city }})</span> · {{ s.hall_name }}</td>
+      <td><span class="badge bg-info-subtle text-info-emphasis">{{ s.format }}</span></td>
+      <td>{{ LANGUAGES[s.language] }}</td>
+      <td class="text-end">{{ s.price|money }}</td>
+      <td class="text-end">{{ s.sold }} / {{ s.capacity }}</td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-light" href="{{ url_for('admin_screening_form', screening_id=s.screening_id) }}"><i class="bi bi-pencil"></i></a>
+        <form class="d-inline" method="post" action="{{ url_for('admin_screening_delete', screening_id=s.screening_id) }}"
+              onsubmit="return confirm('Delete this screening?')">
+          <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="8" class="text-secondary">No screenings.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="small text-secondary">The price of a screening cannot be changed after tickets have been sold, and a screening
+  with tickets cannot be deleted. Both rules are enforced by the database.</p>
+{% endblock %}

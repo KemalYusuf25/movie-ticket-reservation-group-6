@@ -1,0 +1,15 @@
+<ul class="nav nav-pills admin-tabs mb-4 gap-1 flex-wrap">
+  {% set tabs = [
+      ('admin_dashboard', 'Dashboard', 'speedometer2'),
+      ('admin_movies', 'Movies', 'film'),
+      ('admin_cinemas', 'Cinemas & Halls', 'building'),
+      ('admin_screenings', 'Screenings', 'calendar-event'),
+      ('admin_reservations', 'Reservations', 'ticket-perforated'),
+      ('admin_users', 'Users', 'people')] %}
+  {% for endpoint, label, icon in tabs %}
+    <li class="nav-item">
+      <a class="nav-link {{ 'active' if active == endpoint }}" href="{{ url_for(endpoint) }}">
+        <i class="bi bi-{{ icon }}"></i> {{ label }}</a>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Select seats{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+  <div>
+    <a href="{{ url_for('movie_detail', movie_id=scr.movie_id) }}" class="small text-secondary text-decoration-none">
+      <i class="bi bi-arrow-left"></i> Back to {{ scr.title }}</a>
+    <h1 class="h3 mt-1 mb-1">{{ scr.title }}</h1>
+    <div class="text-secondary">
+      {{ scr.start_time|dt }} · {{ scr.cinema }} ({{ scr.city }}) · {{ scr.hall_name }} ·
+      <span class="badge bg-info-subtle text-info-emphasis">{{ scr.format }}</span> {{ LANGUAGES[scr.language] }}
+    </div>
+  </div>
+  <div class="text-end">
+    <div>Full: <strong>{{ scr.price|money }}</strong></div>
+    <div>Student: <strong>{{ student_price|money }}</strong></div>
+  </div>
+</div>
+
+{% if not scr.is_future %}
+  <div class="alert alert-warning">This screening has already started. Tickets can no longer be bought.</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <div class="screen"></div>
+      <div class="text-center small text-secondary mb-3" style="margin-top:-2rem">SCREEN</div>
+      <div class="seat-map">
+        {% for row, seats in rows.items() %}
+        <div class="seat-row">
+          <span class="row-label">{{ row }}</span>
+          {% for s in seats %}
+            <button type="button" class="seat {{ s.state if s.state != 'free' }}"
+                    data-id="{{ s.seat_id }}" data-label="{{ s.row_letter }}{{ s.seat_number }}"
+                    title="{{ s.row_letter }}{{ s.seat_number }}"
+                    {% if s.state != 'free' or not scr.is_future %}disabled{% endif %}>{{ s.seat_number }}</button>
+          {% endfor %}
+          <span class="row-label">{{ row }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="legend d-flex flex-wrap justify-content-center gap-3 mt-4 small text-secondary">
+        <span><span class="seat"></span> Free</span>
+        <span><span class="seat selected"></span> Your selection</span>
+        <span><span class="seat held"></span> In someone's cart</span>
+        <span><span class="seat mine"></span> In your cart</span>
+        <span><span class="seat sold"></span> Sold</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <form method="post" action="{{ url_for('book', screening_id=scr.screening_id) }}" class="card p-4">
+      <h2 class="h5">Your seats</h2>
+      <p id="empty" class="text-secondary small">Click on free seats to select them (max {{ max_seats }}).</p>
+      <div id="selected"></div>
+      <hr>
+      <div class="d-flex justify-content-between fs-5 mb-3">
+        <span>Total</span><strong id="total">0.00 TL</strong>
+      </div>
+      <button id="continue" class="btn btn-accent w-100" disabled>Continue · hold seats for 5 min</button>
+      <p class="small text-secondary mt-2 mb-0">
+        Selected seats are reserved for you for 5 minutes. If you do not pay in time they are released.
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const FULL = {{ scr.price|float }}, STUDENT = {{ student_price|float }}, MAX = {{ max_seats }};
+const selected = new Map();             // seat_id -> {label, type}
+const list = document.getElementById('selected');
+
+function render() {
+  list.innerHTML = '';
+  let total = 0;
+  for (const [id, s] of selected) {
+    total += s.type === 'student' ? STUDENT : FULL;
+    const row = document.createElement('div');
+    row.className = 'd-flex align-items-center gap-2 mb-2';
+    row.innerHTML = `<span class="badge bg-accent fs-6" style="width:3rem">${s.label}</span>
+      <select class="form-select form-select-sm" name="type_${id}">
+        <option value="full" ${s.type === 'full' ? 'selected' : ''}>Full · ${FULL.toFixed(2)} TL</option>
+        <option value="student" ${s.type === 'student' ? 'selected' : ''}>Student · ${STUDENT.toFixed(2)} TL</option>
+      </select>`;
+    row.querySelector('select').addEventListener('change', e => { s.type = e.target.value; render(); });
+    list.appendChild(row);
+  }
+  document.getElementById('total').textContent = total.toFixed(2) + ' TL';
+  document.getElementById('empty').style.display = selected.size ? 'none' : '';
+  document.getElementById('continue').disabled = selected.size === 0;
+}
+
+document.querySelectorAll('.seat-map .seat:not(:disabled)').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.id;
+    if (selected.has(id)) { selected.delete(id); btn.classList.remove('selected'); }
+    else if (selected.size < MAX) { selected.set(id, {label: btn.dataset.label, type: 'full'}); btn.classList.add('selected'); }
+    render();
+  });
+});
+</script>
+{% endblock %}

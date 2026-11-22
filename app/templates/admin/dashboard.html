@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+{% set active = 'admin_dashboard' %}{% include "admin/_nav.html" %}
+<div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-3 mb-4">
+  {% for label, value in [('Movies', stats.movies), ('Cinemas', stats.cinemas),
+                          ('Upcoming screenings', stats.upcoming), ('Customers', stats.customers),
+                          ('Tickets sold', stats.tickets_sold), ('Revenue', stats.revenue|money)] %}
+  <div class="col"><div class="card p-3 h-100">
+    <div class="small text-secondary">{{ label }}</div>
+    <div class="stat">{{ value }}</div>
+  </div></div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card p-3 h-100">
+      <h2 class="h6">Tickets sold and revenue per movie</h2>
+      <table class="table table-sm mb-0">
+        <thead><tr><th>Movie</th><th class="text-end">Tickets</th><th class="text-end">Revenue</th></tr></thead>
+        <tbody>
+        {% for r in per_movie %}
+          <tr><td>{{ r.title }}</td><td class="text-end">{{ r.tickets_sold }}</td><td class="text-end">{{ r.revenue|money }}</td></tr>
+        {% else %}
+          <tr><td colspan="3" class="text-secondary">No tickets sold yet.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card p-3 h-100">
+      <h2 class="h6">Movies without any screening</h2>
+      <ul class="mb-0">
+      {% for m in no_screening %}
+        <li><a href="{{ url_for('admin_screening_form') }}">{{ m.title }}</a></li>
+      {% else %}
+        <li class="text-secondary">Every movie has at least one screening.</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

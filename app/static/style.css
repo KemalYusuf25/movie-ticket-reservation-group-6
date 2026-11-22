@@ -1,0 +1,132 @@
+/* =====================================================================
+   Büyülü Salon theme: midnight-purple velvet, antique gold, a sky of stars
+   ===================================================================== */
+:root, [data-bs-theme="dark"] {
+  --accent: #e8c26b;            /* antique gold */
+  --accent-dark: #c9a24a;
+  --glow: #b48cff;              /* lavender glow */
+  --bg: #120b24;                /* midnight purple */
+  --card: #1c1336;
+  --card-border: #34275c;
+
+  --bs-body-bg: var(--bg);
+  --bs-body-color: #ece6f7;
+  --bs-secondary-color: #a99dc9;
+  --bs-border-color: #34275c;
+  --bs-secondary-bg: #241a42;
+  --bs-tertiary-bg: #1c1336;
+  --bs-link-color: #cdb4ff;
+  --bs-link-hover-color: #e8c26b;
+  --bs-link-color-rgb: 205, 180, 255;
+  --bs-link-hover-color-rgb: 232, 194, 107;
+
+  --seat-free: #3b2f63;
+  --seat-selected: #e8c26b;
+  --seat-held: #8a6420;
+  --seat-sold: #7c2347;
+  --seat-mine: #6a5cff;
+}
+
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 78% 9%,  rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 42% 32%, rgba(232,194,107,.55), transparent 60%),
+    radial-gradient(1px 1px at 90% 44%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 22% 66%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 64% 78%, rgba(180,140,255,.5), transparent 60%),
+    radial-gradient(900px 500px at 85% -10%, rgba(180,140,255,.18), transparent 70%),
+    radial-gradient(800px 500px at -10% 110%, rgba(232,194,107,.10), transparent 70%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* headings with a classic, theatrical serif */
+h1, h2, .h1, .h2, .h3, .h4, .brand-name {
+  font-family: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+  letter-spacing: .01em;
+}
+h1, .h3, .h2 { font-weight: 700; }
+
+/* navbar: velvet curtain with a golden hem */
+.app-nav {
+  background: linear-gradient(180deg, rgba(42, 18, 66, .96), rgba(26, 13, 46, .94));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(232,194,107,.35) !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+.brand-name { font-size: 1.55rem; font-weight: 700; color: var(--accent);
+  text-shadow: 0 0 18px rgba(232,194,107,.35); }
+.brand-mark { color: var(--glow); filter: drop-shadow(0 0 6px rgba(180,140,255,.7)); }
+
+.text-accent { color: var(--accent) !important; }
+.bg-accent { background: var(--accent) !important; color: #24143d !important; }
+.btn-accent {
+  --bs-btn-color: #24143d; --bs-btn-hover-color: #24143d; --bs-btn-active-color: #24143d;
+  --bs-btn-disabled-color: #24143d; --bs-btn-focus-shadow-rgb: 232, 194, 107;
+  background: linear-gradient(180deg, #f2d48a, var(--accent) 55%, var(--accent-dark));
+  color: #24143d; border: none; font-weight: 700;
+  box-shadow: 0 4px 14px rgba(232,194,107,.25);
+}
+.btn-accent:hover, .btn-accent:focus { filter: brightness(1.07); color: #24143d;
+  box-shadow: 0 6px 20px rgba(232,194,107,.4); }
+.btn-accent:disabled { filter: grayscale(.4) brightness(.8); opacity: .75; }
+
+.card {
+  background: linear-gradient(180deg, rgba(36, 24, 66, .92), rgba(28, 19, 54, .92));
+  border-color: var(--card-border);
+}
+.table { --bs-table-bg: transparent; --bs-table-color: #ece6f7; --bs-table-border-color: #34275c; }
+.form-control, .form-select { background-color: #160f2c; border-color: #3d2f6b; }
+.form-control:focus, .form-select:focus { border-color: var(--accent);
+  box-shadow: 0 0 0 .2rem rgba(232,194,107,.2); }
+.alert { backdrop-filter: blur(4px); }
+footer { color: var(--bs-secondary-color); }
+
+/* hero line on the home page */
+.hero { padding: .5rem 0 1rem; }
+.hero .tagline { color: var(--bs-secondary-color); font-style: italic; }
+.divider-stars { color: var(--accent); letter-spacing: .6em; font-size: .8rem; opacity: .8; }
+
+/* movie grid */
+.movie-card { transition: transform .18s ease, box-shadow .18s ease; height: 100%; }
+.movie-card:hover { transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(232,194,107,.45), 0 0 26px rgba(180,140,255,.25); }
+.poster { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: .5rem .5rem 0 0; background: #1f1538; }
+.poster-lg { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: .75rem;
+  box-shadow: 0 0 0 1px rgba(232,194,107,.4), 0 18px 40px rgba(0,0,0,.55); }
+.poster-thumb { width: 48px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: .25rem; }
+.badge-rating { background: #2b1f4d; border: 1px solid #4a3a80; color: #ece6f7; }
+
+/* seat map */
+.screen {
+  height: 8px; border-radius: 50%; margin: 0 auto 2.5rem; width: 80%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  box-shadow: 0 8px 34px rgba(232, 194, 107, .55);
+}
+.seat-row { display: flex; align-items: center; justify-content: center; gap: .35rem; margin-bottom: .35rem; }
+.row-label { width: 1.5rem; text-align: center; color: var(--bs-secondary-color); font-weight: 600; }
+.seat {
+  width: 2rem; height: 2rem; border-radius: .55rem .55rem .2rem .2rem; border: none;
+  font-size: .7rem; color: #d9d0f0; background: var(--seat-free); cursor: pointer;
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.seat:hover:not(:disabled) { transform: scale(1.12); box-shadow: 0 0 10px rgba(180,140,255,.6); }
+.seat.selected { background: var(--seat-selected); color: #24143d; font-weight: 700;
+  box-shadow: 0 0 12px rgba(232,194,107,.7); }
+.seat.held { background: var(--seat-held); cursor: not-allowed; }
+.seat.sold { background: var(--seat-sold); cursor: not-allowed; }
+.seat.mine { background: var(--seat-mine); cursor: not-allowed; }
+.legend .seat { width: 1.2rem; height: 1.2rem; cursor: default; display: inline-block; vertical-align: middle; box-shadow: none; }
+.seat-map { overflow-x: auto; padding-bottom: .5rem; }
+
+/* checkout timer */
+.timer { font-size: 2.5rem; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); }
+.timer.warn { color: #ff7a8a; }
+
+/* admin */
+.stat { font-size: 1.5rem; font-weight: 700; white-space: nowrap; color: var(--accent); }
+.admin-tabs .nav-link { color: #d9d0f0; }
+.admin-tabs .nav-link:hover { color: var(--accent); }
+.admin-tabs .nav-link.active { background: var(--accent); color: #24143d; font-weight: 700; }

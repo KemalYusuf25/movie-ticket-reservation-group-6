@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Movies{% endblock %}
+{% block content %}
+<div class="hero d-flex flex-wrap justify-content-between align-items-end mb-4 gap-2">
+  <div>
+    <div class="divider-stars mb-1">✦ ✦ ✦</div>
+    <h1 class="display-6 mb-1">Now showing at <span class="text-accent">Büyülü Salon</span></h1>
+    <p class="tagline mb-0">A little magic in every seat. Pick a movie, choose your seats and you are done in under 5 minutes.</p>
+  </div>
+  <form class="d-flex gap-2" method="get">
+    <select name="genre" class="form-select form-select-sm" onchange="this.form.submit()">
+      <option value="">All genres</option>
+      {% for g_ in genres %}
+        <option value="{{ g_.genre }}" {% if g_.genre == genre %}selected{% endif %}>{{ g_.genre }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+  {% for m in movies %}
+  <div class="col">
+    <a href="{{ url_for('movie_detail', movie_id=m.movie_id) }}" class="text-decoration-none text-reset">
+      <div class="card movie-card">
+        <img class="poster" src="{{ url_for('poster', movie_id=m.movie_id) }}" alt="{{ m.title }} poster">
+        <div class="card-body">
+          <h2 class="h6 card-title mb-1">{{ m.title }}</h2>
+          <div class="small text-secondary mb-2">{{ m.genre }} · {{ m.duration_min }} min</div>
+          <span class="badge badge-rating">{{ m.age_rating }}</span>
+          {% if m.upcoming %}
+            <span class="badge bg-success-subtle text-success-emphasis">{{ m.upcoming }} screening{{ 's' if m.upcoming != 1 }}</span>
+          {% else %}
+            <span class="badge bg-secondary-subtle text-secondary-emphasis">Coming soon</span>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+  </div>
+  {% else %}
+  <p class="text-secondary">No movies found.</p>
+  {% endfor %}
+</div>
+{% endblock %}
