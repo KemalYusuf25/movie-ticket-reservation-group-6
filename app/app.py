@@ -601,7 +601,7 @@ def admin_cinema_form(cinema_id=None):
                 cinema_id = ok["cinema_id"]
         if ok:
             return redirect(url_for("admin_cinema_detail", cinema_id=cinema_id))
-        cinema = f.to_dict()
+        cinema = dict(f.to_dict(), cinema_id=cinema_id)
     return render_template("admin/cinema_form.html", cinema=cinema)
 
 
@@ -721,7 +721,7 @@ def admin_screening_form(screening_id=None):
                            VALUES (%s, %s, %s, %s, %s, %s)""", values, success="Screening added.")
         if ok:
             return redirect(url_for("admin_screenings"))
-        scr = f.to_dict()
+        scr = dict(f.to_dict(), screening_id=screening_id)
     movies = query("SELECT movie_id, title FROM movie ORDER BY title")
     halls = query("""SELECT h.hall_id, c.city || ' - ' || c.name || ' - ' || h.hall_name AS label
                      FROM hall h JOIN cinema c ON c.cinema_id = h.cinema_id
