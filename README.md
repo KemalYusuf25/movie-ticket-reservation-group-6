@@ -107,3 +107,4 @@ Copy `.env.example` to `.env` to change settings:
 ## Team
 
 Group 6 — CMPE341, Atılım University, Fall 2026–2027
+23244710037 Berat Özkaner 
