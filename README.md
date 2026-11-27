@@ -110,3 +110,4 @@ Group 6 — CMPE341, Atılım University, Fall 2026–2027
 
 23244710037 Berat Özkaner 
 24243610006 Pakize Pınar Döğer
+24243510039 Elif İpek Aktaş 
